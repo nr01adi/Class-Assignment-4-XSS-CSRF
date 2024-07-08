@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Form</title>
+<style>
+input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  resize: vertical;
+}
+label {
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+}
+input[type=submit] {
+  background-color: #04AA6D;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: center;
+  margin-top: 6px;
+}
+.student {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+.left {
+  float: left;
+  width: 25%;
+  margin-top: 6px;
+}
+.right {
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.navbar {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.navbar a {
+  float: right;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 20px;
+  text-decoration: none;
+}
+
+.navbar a:hover {
+  background-color: #ddd;
+  color: black;
+}
+</style>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self';">
+</head>
+<body>
+<div class="navbar">
+  <a href="login.php">Logout</a>
+</div>
+<center>
+<h2>Student Form</h2>
+</center>
+<div class="student">
+  <form id="studentDetail" action="post_form.php" method="post">
+    <div class="row">
+      <div class="left">
+        <label for="name">Name (Legal/Official)</label>
+      </div>
+      <div class="right">
+        <input type="text" id="name" name="name">
+      </div>
+    </div>
+    <div class="row">
+      <div class="left">
+        <label for="matricNo">Matric No</label>
+      </div>
+      <div class="right">
+        <input type="text" id="matricNo" name="matricNo">
+      </div>
+    </div>
+    <div class="row">
+      <div class="left">
+        <label for="address">Current Address</label>
+      </div>
+      <div class="right">
+        <input type="text" id="addressCu" name="addressCu">
+      </div>
+    </div>
+    <div class="row">
+      <div class="left">
+        <label for="address">Home Address</label>
+      </div>
+      <div class="right">
+        <input type="text" id="addressHo" name="addressHo">
+      </div>
+    </div>
+    <div class="row">
+      <div class="left">
+        <label for="email">Email (Gmail)</label>
+      </div>
+      <div class="right">
+        <input type="email" id="email" name="email">
+      </div>
+    </div>
+    <div class="row">
+      <div class="left">
+        <label for="phoneNum">Phone Number</label>
+      </div>
+      <div class="right">
+        <input type="tel" id="phoneNum" name="phoneNum">
+      </div>
+    </div>
+    <center>
+      <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+      <input type="submit" value="Submit">
+    </center>
+  </form>
+</div>
+
+<script>
+  document.getElementById('studentDetail').addEventListener('submit', function(event) {
+    var name = document.getElementById('name').value.trim();
+    var matricNo = document.getElementById('matricNo').value.trim();
+    var addressCu = document.getElementById('addressCu').value.trim();
+    var addressHo = document.getElementById('addressHo').value.trim();
+    var email = document.getElementById('email').value.trim();
+    var phoneNum = document.getElementById('phoneNum').value.trim();
+    var errorMessages = [];
+
+    if (name === '') {
+      errorMessages.push('Name is required.');
+    }
+
+    if (matricNo === '') {
+      errorMessages.push('Matric Number is required.');
+    } else if (!validateMatricNumber(matricNo)) {
+      errorMessages.push('Invalid matric no format.');
+    } 
+
+    if (email === '') {
+      errorMessages.push('Email is required.');
+    } else if (!validateEmail(email)) {
+      errorMessages.push('Invalid email format.');
+    } 
+
+    if (addressCu === '') {
+      errorMessages.push('Current Address is required.');
+    }
+
+    if (addressHo === '') {
+      errorMessages.push('Home Address is required.');
+    }
+
+    if (phoneNum === '') {
+      errorMessages.push('Phone Number is required.');
+    } else if (!validatePhoneNum(phoneNum)) {
+      errorMessages.push('Invalid phone number format.');
+    }
+
+    if (errorMessages.length > 0) {
+      event.preventDefault();
+      var errorMessage = errorMessages.join('\n');
+      alert(errorMessage);
+    }
+  });
+
+  function validateEmail(email) {
+    var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  }
+
+  function validatePhoneNum(phoneNum) {
+    var regex = /^\d{10}$/;
+    return regex.test(phoneNum);
+  }
+
+  function validateMatricNumber(matricNo) {
+    var regex = /^\d{6}$/;
+    return regex.test(matricNo);
+  }
+
+</script>
+</body>
+</html>
